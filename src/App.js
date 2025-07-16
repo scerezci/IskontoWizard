@@ -94,25 +94,7 @@ const App = () => {
       title: "Temel Bilgiler",
       description: "Kampanya temel bilgilerini girin",
       icon: User,
-      color: "from-blue-500 to-purple-600"
-    },
-    {
-      title: "Kriterler",
-      description: "Uygulama kriterlerini tanımlayın",
-      icon: Target,
-      color: "from-purple-500 to-pink-600"
-    },
-    {
-      title: "Hedef Kriterleri",
-      description: "Hedef ürün kriterlerini ve ayarlarını tanımlayın",
-      icon: Target,
-      color: "from-pink-500 to-red-600"
-    },
-    {
-      title: "Kademeler",
-      description: "Kayıtları görüntüleyin, ekleyin ve düzenleyin",
-      icon: List,
-      color: "from-red-500 to-orange-600"
+      color: "primary"
     }
   ];
 
@@ -299,60 +281,58 @@ const App = () => {
     const validation = fieldValidations[field];
 
     return (
-      <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
+      <div className="mb-3">
+        <label className="form-label">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-danger ms-1">*</span>}
         </label>
-        <div className="relative">
+        <div className="position-relative">
           {children}
-          <div className="absolute right-2 top-2.5">
+          <div className="position-absolute top-50 end-0 translate-middle-y me-3">
             {status === 'success' && (
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="text-success" size={16} />
             )}
             {status === 'error' && (
-              <AlertCircle className="w-4 h-4 text-red-500" />
+              <AlertCircle className="text-danger" size={16} />
             )}
             {status === 'warning' && (
-              <AlertCircle className="w-4 h-4 text-yellow-500" />
+              <AlertCircle className="text-warning" size={16} />
             )}
           </div>
         </div>
         {error && (
-          <p className="text-red-500 text-xs flex items-center gap-1">
-            <AlertCircle className="w-3 h-3" />
+          <div className="text-danger small mt-1">
+            <AlertCircle size={12} className="me-1" />
             {error}
-          </p>
+          </div>
         )}
         {!error && validation && !validation.isValid && (
-          <p className="text-yellow-500 text-xs flex items-center gap-1">
-            <AlertCircle className="w-3 h-3" />
+          <div className="text-warning small mt-1">
+            <AlertCircle size={12} className="me-1" />
             {validation.message}
-          </p>
+          </div>
         )}
       </div>
     );
   };
 
   const renderStepContent = () => {
-    const baseInputClasses = "w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200";
-    
     const getInputClasses = (field) => {
       const status = getFieldStatus(field);
-      let classes = baseInputClasses;
+      let classes = 'form-control';
       
       switch (status) {
         case 'success':
-          classes += ' border-green-500 bg-green-50';
+          classes += ' is-valid';
           break;
         case 'error':
-          classes += ' border-red-500 bg-red-50';
+          classes += ' is-invalid';
           break;
         case 'warning':
-          classes += ' border-yellow-500 bg-yellow-50';
+          classes += ' border-warning';
           break;
         default:
-          classes += ' border-gray-300';
+          break;
       }
       
       return classes;
@@ -361,423 +341,300 @@ const App = () => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-6">
+          <div>
             {/* İlk Satır - Kod, Durum, Açıklama */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <InputWrapper field="kod" label="Kod" required>
-                <input
-                  type="text"
-                  value={formData.kod}
-                  onChange={(e) => handleInputChange('kod', e.target.value)}
-                  className={getInputClasses('kod')}
-                  placeholder="0"
-                />
-              </InputWrapper>
+            <div className="row mb-4">
+              <div className="col-md-4">
+                <InputWrapper field="kod" label="Kod" required>
+                  <input
+                    type="text"
+                    value={formData.kod}
+                    onChange={(e) => handleInputChange('kod', e.target.value)}
+                    className={getInputClasses('kod')}
+                    placeholder="0"
+                  />
+                </InputWrapper>
+              </div>
               
-              <InputWrapper field="durum" label="Durum" required>
-                <select
-                  value={formData.durum}
-                  onChange={(e) => handleInputChange('durum', e.target.value)}
-                  className={getInputClasses('durum')}
-                >
-                  <option value="Aktif">Aktif</option>
-                  <option value="Pasif">Pasif</option>
-                  <option value="Beklemede">Beklemede</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-4">
+                <InputWrapper field="durum" label="Durum" required>
+                  <select
+                    value={formData.durum}
+                    onChange={(e) => handleInputChange('durum', e.target.value)}
+                    className={getInputClasses('durum')}
+                  >
+                    <option value="Aktif">Aktif</option>
+                    <option value="Pasif">Pasif</option>
+                    <option value="Beklemede">Beklemede</option>
+                  </select>
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="aciklama" label="Açıklama" required>
-                <select
-                  value={formData.aciklama}
-                  onChange={(e) => handleInputChange('aciklama', e.target.value)}
-                  className={getInputClasses('aciklama')}
-                >
-                  <option value="">Seçiniz</option>
-                  <option value="Onay">Onay</option>
-                  <option value="Onay/anmadı">Onay/anmadı</option>
-                  <option value="Kampanya">Kampanya</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-4">
+                <InputWrapper field="aciklama" label="Açıklama" required>
+                  <select
+                    value={formData.aciklama}
+                    onChange={(e) => handleInputChange('aciklama', e.target.value)}
+                    className={getInputClasses('aciklama')}
+                  >
+                    <option value="">Seçiniz</option>
+                    <option value="Onay">Onay</option>
+                    <option value="Onay/anmadı">Onay/anmadı</option>
+                    <option value="Kampanya">Kampanya</option>
+                  </select>
+                </InputWrapper>
+              </div>
             </div>
 
             {/* İkinci Satır - Tarihler */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <InputWrapper field="baslangicTarihi" label="Başlangıç Tarihi" required>
-                <input
-                  type="date"
-                  value={formData.baslangicTarihi}
-                  onChange={(e) => handleInputChange('baslangicTarihi', e.target.value)}
-                  className={getInputClasses('baslangicTarihi')}
-                  placeholder="10.7.2025"
-                />
-              </InputWrapper>
+            <div className="row mb-4">
+              <div className="col-md-3">
+                <InputWrapper field="baslangicTarihi" label="Başlangıç Tarihi" required>
+                  <input
+                    type="date"
+                    value={formData.baslangicTarihi}
+                    onChange={(e) => handleInputChange('baslangicTarihi', e.target.value)}
+                    className={getInputClasses('baslangicTarihi')}
+                  />
+                </InputWrapper>
+              </div>
               
-              <InputWrapper field="bitisTarihi" label="Bitiş Tarihi" required>
-                <input
-                  type="date"
-                  value={formData.bitisTarihi}
-                  onChange={(e) => handleInputChange('bitisTarihi', e.target.value)}
-                  className={getInputClasses('bitisTarihi')}
-                  placeholder="31.12.2025"
-                />
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="bitisTarihi" label="Bitiş Tarihi" required>
+                  <input
+                    type="date"
+                    value={formData.bitisTarihi}
+                    onChange={(e) => handleInputChange('bitisTarihi', e.target.value)}
+                    className={getInputClasses('bitisTarihi')}
+                  />
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="belgetipi" label="Belge Tip">
-                <select
-                  value={formData.belgetipi}
-                  onChange={(e) => handleInputChange('belgetipi', e.target.value)}
-                  className={getInputClasses('belgetipi')}
-                >
-                  <option value="Hepsi">Hepsi</option>
-                  <option value="Fatura">Fatura</option>
-                  <option value="İrsaliye">İrsaliye</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="belgetipi" label="Belge Tip">
+                  <select
+                    value={formData.belgetipi}
+                    onChange={(e) => handleInputChange('belgetipi', e.target.value)}
+                    className={getInputClasses('belgetipi')}
+                  >
+                    <option value="Hepsi">Hepsi</option>
+                    <option value="Fatura">Fatura</option>
+                    <option value="İrsaliye">İrsaliye</option>
+                  </select>
+                </InputWrapper>
+              </div>
 
-              <div className="flex items-center space-x-2 mt-6">
-                <label className="flex items-center space-x-2 cursor-pointer">
+              <div className="col-md-3 d-flex align-items-end">
+                <div className="form-check">
                   <input
                     type="checkbox"
+                    id="verziparitiKampanya"
                     checked={formData.verziparitiKampanya}
                     onChange={() => handleCheckboxChange('verziparitiKampanya')}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="form-check-input"
                   />
-                  <span className="text-sm text-gray-700">Verzipariti Kampanya</span>
-                </label>
+                  <label className="form-check-label" htmlFor="verziparitiKampanya">
+                    Verzipariti Kampanya
+                  </label>
+                </div>
               </div>
             </div>
 
             {/* Üçüncü Satır - Belge ve Saha */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <InputWrapper field="belgeTur" label="Belge Tür">
-                <select
-                  value={formData.belgeTur}
-                  onChange={(e) => handleInputChange('belgeTur', e.target.value)}
-                  className={getInputClasses('belgeTur')}
-                >
-                  <option value="">Seçiniz</option>
-                  <option value="Satış">Satış</option>
-                  <option value="İade">İade</option>
-                </select>
-              </InputWrapper>
+            <div className="row mb-4">
+              <div className="col-md-3">
+                <InputWrapper field="belgeTur" label="Belge Tür">
+                  <select
+                    value={formData.belgeTur}
+                    onChange={(e) => handleInputChange('belgeTur', e.target.value)}
+                    className={getInputClasses('belgeTur')}
+                  >
+                    <option value="">Seçiniz</option>
+                    <option value="Satış">Satış</option>
+                    <option value="İade">İade</option>
+                  </select>
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="sayi" label="Sayı">
-                <input
-                  type="number"
-                  value={formData.sayi}
-                  onChange={(e) => handleInputChange('sayi', e.target.value)}
-                  className={getInputClasses('sayi')}
-                  placeholder="0"
-                />
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="sayi" label="Sayı">
+                  <input
+                    type="number"
+                    value={formData.sayi}
+                    onChange={(e) => handleInputChange('sayi', e.target.value)}
+                    className={getInputClasses('sayi')}
+                    placeholder="0"
+                  />
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="uygulamaYeri" label="Uygulama Yeri">
-                <select
-                  value={formData.uygulamaYeri}
-                  onChange={(e) => handleInputChange('uygulamaYeri', e.target.value)}
-                  className={getInputClasses('uygulamaYeri')}
-                >
-                  <option value="Panorama">Panorama</option>
-                  <option value="Merkez">Merkez</option>
-                  <option value="Şube">Şube</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="uygulamaYeri" label="Uygulama Yeri">
+                  <select
+                    value={formData.uygulamaYeri}
+                    onChange={(e) => handleInputChange('uygulamaYeri', e.target.value)}
+                    className={getInputClasses('uygulamaYeri')}
+                  >
+                    <option value="Panorama">Panorama</option>
+                    <option value="Merkez">Merkez</option>
+                    <option value="Şube">Şube</option>
+                  </select>
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="vadeGunu" label="Vade Günü">
-                <input
-                  type="number"
-                  value={formData.vadeGunu}
-                  onChange={(e) => handleInputChange('vadeGunu', e.target.value)}
-                  className={getInputClasses('vadeGunu')}
-                  placeholder="255"
-                />
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="vadeGunu" label="Vade Günü">
+                  <input
+                    type="number"
+                    value={formData.vadeGunu}
+                    onChange={(e) => handleInputChange('vadeGunu', e.target.value)}
+                    className={getInputClasses('vadeGunu')}
+                    placeholder="255"
+                  />
+                </InputWrapper>
+              </div>
             </div>
 
             {/* Dördüncü Satır - İskonto/Promosyon ve Ödeme */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InputWrapper field="iskontoPromosyonMetni" label="İskonto/Promosyon Metni">
-                <input
-                  type="text"
-                  value={formData.iskontoPromosyonMetni}
-                  onChange={(e) => handleInputChange('iskontoPromosyonMetni', e.target.value)}
-                  className={getInputClasses('iskontoPromosyonMetni')}
-                  placeholder="İskonto/Promosyon metni"
-                />
-              </InputWrapper>
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <InputWrapper field="iskontoPromosyonMetni" label="İskonto/Promosyon Metni">
+                  <input
+                    type="text"
+                    value={formData.iskontoPromosyonMetni}
+                    onChange={(e) => handleInputChange('iskontoPromosyonMetni', e.target.value)}
+                    className={getInputClasses('iskontoPromosyonMetni')}
+                    placeholder="İskonto/Promosyon metni"
+                  />
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="odemeTipi" label="Ödeme Tipi">
-                <select
-                  value={formData.odemeTipi}
-                  onChange={(e) => handleInputChange('odemeTipi', e.target.value)}
-                  className={getInputClasses('odemeTipi')}
-                >
-                  <option value="Hepsi">Hepsi</option>
-                  <option value="Nakit">Nakit</option>
-                  <option value="Kredi Kartı">Kredi Kartı</option>
-                  <option value="Çek">Çek</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-6">
+                <InputWrapper field="odemeTipi" label="Ödeme Tipi">
+                  <select
+                    value={formData.odemeTipi}
+                    onChange={(e) => handleInputChange('odemeTipi', e.target.value)}
+                    className={getInputClasses('odemeTipi')}
+                  >
+                    <option value="Hepsi">Hepsi</option>
+                    <option value="Nakit">Nakit</option>
+                    <option value="Kredi Kartı">Kredi Kartı</option>
+                    <option value="Çek">Çek</option>
+                  </select>
+                </InputWrapper>
+              </div>
             </div>
 
             {/* Beşinci Satır - Arama Alanları */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <InputWrapper field="iskontoGrubu" label="İskonto Grubu">
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={formData.iskontoGrubu}
-                    onChange={(e) => handleInputChange('iskontoGrubu', e.target.value)}
-                    className={getInputClasses('iskontoGrubu') + ' rounded-r-none'}
-                    placeholder="İskonto Grubu"
-                  />
-                  <button className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors">
-                    <Search size={16} />
-                  </button>
-                </div>
-              </InputWrapper>
+            <div className="row mb-4">
+              <div className="col-md-3">
+                <InputWrapper field="iskontoGrubu" label="İskonto Grubu">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      value={formData.iskontoGrubu}
+                      onChange={(e) => handleInputChange('iskontoGrubu', e.target.value)}
+                      className={getInputClasses('iskontoGrubu')}
+                      placeholder="İskonto Grubu"
+                    />
+                    <button className="btn btn-primary" type="button">
+                      <Search size={16} />
+                    </button>
+                  </div>
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="iadeCezaIsk" label="İade Ceza İsk.">
-                <select
-                  value={formData.iadeCezaIsk}
-                  onChange={(e) => handleInputChange('iadeCezaIsk', e.target.value)}
-                  className={getInputClasses('iadeCezaIsk')}
-                >
-                  <option value="Hayır">Hayır</option>
-                  <option value="Evet">Evet</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="iadeCezaIsk" label="İade Ceza İsk.">
+                  <select
+                    value={formData.iadeCezaIsk}
+                    onChange={(e) => handleInputChange('iadeCezaIsk', e.target.value)}
+                    className={getInputClasses('iadeCezaIsk')}
+                  >
+                    <option value="Hayır">Hayır</option>
+                    <option value="Evet">Evet</option>
+                  </select>
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="butcedeUygula" label="Bütçede Uygula">
-                <select
-                  value={formData.butcedeUygula}
-                  onChange={(e) => handleInputChange('butcedeUygula', e.target.value)}
-                  className={getInputClasses('butcedeUygula')}
-                >
-                  <option value="Evet">Evet</option>
-                  <option value="Hayır">Hayır</option>
-                </select>
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="butcedeUygula" label="Bütçede Uygula">
+                  <select
+                    value={formData.butcedeUygula}
+                    onChange={(e) => handleInputChange('butcedeUygula', e.target.value)}
+                    className={getInputClasses('butcedeUygula')}
+                  >
+                    <option value="Evet">Evet</option>
+                    <option value="Hayır">Hayır</option>
+                  </select>
+                </InputWrapper>
+              </div>
 
-              <InputWrapper field="hareketTipi" label="Hareket Tipi">
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={formData.hareketTipi}
-                    onChange={(e) => handleInputChange('hareketTipi', e.target.value)}
-                    className={getInputClasses('hareketTipi') + ' rounded-r-none'}
-                    placeholder="Hareket Tipi"
-                  />
-                  <button className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors">
-                    <Search size={16} />
-                  </button>
-                </div>
-              </InputWrapper>
+              <div className="col-md-3">
+                <InputWrapper field="hareketTipi" label="Hareket Tipi">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      value={formData.hareketTipi}
+                      onChange={(e) => handleInputChange('hareketTipi', e.target.value)}
+                      className={getInputClasses('hareketTipi')}
+                      placeholder="Hareket Tipi"
+                    />
+                    <button className="btn btn-primary" type="button">
+                      <Search size={16} />
+                    </button>
+                  </div>
+                </InputWrapper>
+              </div>
             </div>
 
             {/* Altıncı Satır - Kontrat ve Checkboxlar */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InputWrapper field="kontratButce" label="Kontrat Bütçe">
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={formData.kontratButce}
-                    onChange={(e) => handleInputChange('kontratButce', e.target.value)}
-                    className={getInputClasses('kontratButce') + ' rounded-r-none'}
-                    placeholder="Kontrat Bütçe"
-                  />
-                  <button className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors">
-                    <Search size={16} />
-                  </button>
-                </div>
-              </InputWrapper>
-
-              <div className="space-y-3 mt-6">
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.sefBarindaBolunun}
-                    onChange={() => handleCheckboxChange('sefBarindaBolunun')}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">Şef Barında Bölünün</span>
-                </label>
-
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.commercePortalKampanya}
-                    onChange={() => handleCheckboxChange('commercePortalKampanya')}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">CommercePortal Kampanya</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 1:
-        return (
-          <div className="space-y-6">
-            {/* Kriterler Bölümü - Fotoğrafa göre */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-700 mb-6 flex items-center gap-2">
-                <Target className="w-5 h-5" />
-                Kriterler
-              </h3>
-              
-              {/* İlk Satır - Dağıtımcı Kriter Tipi ve Kriteri */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <InputWrapper field="dagitimciKriterTipi" label="Dağıtımcı Kriter Tipi" required>
-                  <select
-                    value={formData.dagitimciKriterTipi}
-                    onChange={(e) => handleInputChange('dagitimciKriterTipi', e.target.value)}
-                    className={getInputClasses('dagitimciKriterTipi')}
-                  >
-                    <option value="">Seçiniz</option>
-                    <option value="Kod">Kod</option>
-                    <option value="Grup">Grup</option>
-                    <option value="Kategori">Kategori</option>
-                  </select>
-                </InputWrapper>
-
-                <InputWrapper field="dagitimciKriteri" label="Dağıtımcı Kriteri">
-                  <div className="flex">
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <InputWrapper field="kontratButce" label="Kontrat Bütçe">
+                  <div className="input-group">
                     <input
                       type="text"
-                      value={formData.dagitimciKriteri}
-                      onChange={(e) => handleInputChange('dagitimciKriteri', e.target.value)}
-                      className={getInputClasses('dagitimciKriteri') + ' rounded-r-none'}
-                      placeholder="Dağıtımcı kriteri girin"
+                      value={formData.kontratButce}
+                      onChange={(e) => handleInputChange('kontratButce', e.target.value)}
+                      className={getInputClasses('kontratButce')}
+                      placeholder="Kontrat Bütçe"
                     />
-                    <button 
-                      type="button"
-                      className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
-                    >
+                    <button className="btn btn-primary" type="button">
                       <Search size={16} />
                     </button>
                   </div>
                 </InputWrapper>
               </div>
 
-              {/* İkinci Satır - Uygulama Kriteri ve Checkbox */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <InputWrapper field="uygulamaKriteri" label="Uygulama Kriteri">
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={formData.uygulamaKriteri}
-                      onChange={(e) => handleInputChange('uygulamaKriteri', e.target.value)}
-                      className={getInputClasses('uygulamaKriteri') + ' rounded-r-none'}
-                      placeholder="Uygulama kriteri girin"
-                    />
-                    <button 
-                      type="button"
-                      className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
-                    >
-                      <Search size={16} />
-                    </button>
-                  </div>
-                </InputWrapper>
-
-                <div className="flex items-center mt-6">
-                  <label className="flex items-center space-x-3 cursor-pointer">
+              <div className="col-md-6">
+                <div className="mt-4">
+                  <div className="form-check mb-2">
                     <input
                       type="checkbox"
-                      checked={formData.uygulamaKriteriKullanimi}
-                      onChange={() => handleCheckboxChange('uygulamaKriteriKullanimi')}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      id="sefBarindaBolunun"
+                      checked={formData.sefBarindaBolunun}
+                      onChange={() => handleCheckboxChange('sefBarindaBolunun')}
+                      className="form-check-input"
                     />
-                    <span className="text-sm text-gray-700 font-medium">Uygulama Kriterleri Kullanılan</span>
-                  </label>
+                    <label className="form-check-label" htmlFor="sefBarindaBolunun">
+                      Şef Barında Bölünün
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      id="commercePortalKampanya"
+                      checked={formData.commercePortalKampanya}
+                      onChange={() => handleCheckboxChange('commercePortalKampanya')}
+                      className="form-check-input"
+                    />
+                    <label className="form-check-label" htmlFor="commercePortalKampanya">
+                      CommercePortal Kampanya
+                    </label>
+                  </div>
                 </div>
-              </div>
-
-              {/* Üçüncü Satır - Müşteri Kriter ve Müşteri Kriter Tipi */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <InputWrapper field="musteriKriter" label="Müşteri Kriter">
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={formData.musteriKriter}
-                      onChange={(e) => handleInputChange('musteriKriter', e.target.value)}
-                      className={getInputClasses('musteriKriter') + ' rounded-r-none'}
-                      placeholder="Müşteri kriteri girin"
-                    />
-                    <button 
-                      type="button"
-                      className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
-                    >
-                      <Search size={16} />
-                    </button>
-                  </div>
-                </InputWrapper>
-
-                <InputWrapper field="musteriKriterTipi" label="Müşteri Kriter Tipi">
-                  <select
-                    value={formData.musteriKriterTipi}
-                    onChange={(e) => handleInputChange('musteriKriterTipi', e.target.value)}
-                    className={getInputClasses('musteriKriterTipi')}
-                  >
-                    <option value="">Seçiniz</option>
-                    <option value="Kod">Kod</option>
-                    <option value="Grup">Grup</option>
-                    <option value="Bölge">Bölge</option>
-                    <option value="Kategori">Kategori</option>
-                  </select>
-                </InputWrapper>
-              </div>
-
-              {/* Dördüncü Satır - İade Nedeni ve Ek Saha Kriteri */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputWrapper field="iadeNedeni" label="İade Nedeni">
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={formData.iadeNedeni}
-                      onChange={(e) => handleInputChange('iadeNedeni', e.target.value)}
-                      className={getInputClasses('iadeNedeni') + ' rounded-r-none'}
-                      placeholder="İade nedeni girin"
-                    />
-                    <button 
-                      type="button"
-                      className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
-                    >
-                      <Search size={16} />
-                    </button>
-                    <button 
-                      type="button"
-                      className="px-2 bg-gray-500 text-white hover:bg-gray-600 transition-colors"
-                    >
-                      <span className="text-xs">...</span>
-                    </button>
-                  </div>
-                </InputWrapper>
-
-                <InputWrapper field="ekSahaKriteri" label="Ek Saha Kriteri">
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={formData.ekSahaKriteri}
-                      onChange={(e) => handleInputChange('ekSahaKriteri', e.target.value)}
-                      className={getInputClasses('ekSahaKriteri') + ' rounded-r-none'}
-                      placeholder="Ek saha kriteri girin"
-                    />
-                    <button 
-                      type="button"
-                      className="px-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
-                    >
-                      <Search size={16} />
-                    </button>
-                    <button 
-                      type="button"
-                      className="px-2 bg-gray-500 text-white hover:bg-gray-600 transition-colors"
-                    >
-                      <span className="text-xs">...</span>
-                    </button>
-                  </div>
-                </InputWrapper>
               </div>
             </div>
           </div>
