@@ -5,6 +5,9 @@ const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState(''); // 'yeni', 'duzenle', 'izle'
+  const [selectedRecord, setSelectedRecord] = useState(null);
   const [formData, setFormData] = useState({
     // Step 1: Temel Bilgiler (Fotoğrafa göre güncellendi)
     kod: '',
@@ -221,6 +224,47 @@ const App = () => {
       case 4: return ['hizmetGrubu'];
       case 5: return [];
       default: return [];
+    }
+  };
+
+  const openModal = (type, record = null) => {
+    setModalType(type);
+    setSelectedRecord(record);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setModalType('');
+    setSelectedRecord(null);
+  };
+
+  const handleModalSubmit = () => {
+    const recordData = {
+      hdy: formData.hdy,
+      ksl: formData.ksl,
+      altLimit: formData.altLimit,
+      ustLimit: formData.ustLimit,
+      hedef: formData.hedef
+    };
+    
+    console.log(`${modalType} işlemi:`, recordData);
+    
+    if (modalType === 'yeni') {
+      alert('Kayıt başarıyla eklendi!');
+    } else if (modalType === 'duzenle') {
+      alert('Kayıt başarıyla güncellendi!');
+    }
+    
+    closeModal();
+  };
+
+  const getModalTitle = () => {
+    switch (modalType) {
+      case 'yeni': return 'Yeni Kayıt Ekle';
+      case 'duzenle': return 'Kayıt Düzenle';
+      case 'izle': return 'Kayıt Görüntüle';
+      default: return 'Kayıt İşlemi';
     }
   };
 
@@ -1098,7 +1142,7 @@ const App = () => {
                 
                 <button 
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
-                  onClick={() => console.log('Yeni clicked')}
+                  onClick={() => openModal('yeni')}
                 >
                   <span className="text-sm">📄</span>
                   Yeni
@@ -1106,7 +1150,7 @@ const App = () => {
                 
                 <button 
                   className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors flex items-center gap-2"
-                  onClick={() => console.log('Düzenle clicked')}
+                  onClick={() => openModal('duzenle')}
                 >
                   <span className="text-sm">✏️</span>
                   Düzenle
@@ -1114,7 +1158,7 @@ const App = () => {
                 
                 <button 
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center gap-2"
-                  onClick={() => console.log('İzle clicked')}
+                  onClick={() => openModal('izle')}
                 >
                   <span className="text-sm">👁️</span>
                   İzle
@@ -1217,82 +1261,16 @@ const App = () => {
               </div>
             </div>
 
-            {/* Örnek Kayıt Ekleme Formu (Popup benzeri) */}
+            {/* Bilgi Bölümü */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h4 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
                 <span>ℹ️</span>
-                Hızlı Kayıt Ekleme
+                Bilgi
               </h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <InputWrapper field="hdy" label="HDY">
-                  <input
-                    type="text"
-                    value={formData.hdy || ''}
-                    onChange={(e) => handleInputChange('hdy', e.target.value)}
-                    className={getInputClasses('hdy')}
-                    placeholder="HDY değeri"
-                  />
-                </InputWrapper>
-
-                <InputWrapper field="ksl" label="KŞL">
-                  <input
-                    type="text"
-                    value={formData.ksl || ''}
-                    onChange={(e) => handleInputChange('ksl', e.target.value)}
-                    className={getInputClasses('ksl')}
-                    placeholder="KŞL değeri"
-                  />
-                </InputWrapper>
-
-                <InputWrapper field="altLimit" label="Alt Limit">
-                  <input
-                    type="number"
-                    value={formData.altLimit || ''}
-                    onChange={(e) => handleInputChange('altLimit', e.target.value)}
-                    className={getInputClasses('altLimit')}
-                    placeholder="Alt limit değeri"
-                  />
-                </InputWrapper>
-
-                <InputWrapper field="ustLimit" label="Üst Limit">
-                  <input
-                    type="number"
-                    value={formData.ustLimit || ''}
-                    onChange={(e) => handleInputChange('ustLimit', e.target.value)}
-                    className={getInputClasses('ustLimit')}
-                    placeholder="Üst limit değeri"
-                  />
-                </InputWrapper>
-
-                <InputWrapper field="hedef" label="Hedef">
-                  <input
-                    type="number"
-                    value={formData.hedef || ''}
-                    onChange={(e) => handleInputChange('hedef', e.target.value)}
-                    className={getInputClasses('hedef')}
-                    placeholder="Hedef değeri"
-                  />
-                </InputWrapper>
-
-                <div className="flex items-end">
-                  <button 
-                    className="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                    onClick={() => {
-                      console.log('Kayıt eklendi:', {
-                        hdy: formData.hdy,
-                        ksl: formData.ksl,
-                        altLimit: formData.altLimit,
-                        ustLimit: formData.ustLimit,
-                        hedef: formData.hedef
-                      });
-                      alert('Kayıt başarıyla eklendi!');
-                    }}
-                  >
-                    ➕ Kayıt Ekle
-                  </button>
-                </div>
-              </div>
+              <p className="text-blue-700 text-sm">
+                Kayıt eklemek, düzenlemek veya görüntülemek için yukarıdaki ilgili butonları kullanın.
+                Kayıt işlemleri popup pencerede gerçekleştirilir.
+              </p>
             </div>
 
             {/* İstatistikler */}
@@ -1325,16 +1303,6 @@ const App = () => {
           <div className="space-y-6">
             <div className="text-center p-8">
               <h3 className="text-lg font-semibold text-gray-700 mb-4">Sistem Ayarları</h3>
-              <p className="text-gray-500">Bu bölüm geliştirilmekte...</p>
-            </div>
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div className="text-center p-8">
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">Hedef Ayarları</h3>
               <p className="text-gray-500">Bu bölüm geliştirilmekte...</p>
             </div>
           </div>
@@ -1517,6 +1485,128 @@ const App = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal Overlay */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b">
+              <h3 className="text-xl font-semibold text-gray-800">
+                {getModalTitle()}
+              </h3>
+              <button 
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <span className="text-2xl">×</span>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputWrapper field="hdy" label="HDY">
+                  <input
+                    type="text"
+                    value={formData.hdy || ''}
+                    onChange={(e) => handleInputChange('hdy', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="HDY değeri"
+                    disabled={modalType === 'izle'}
+                  />
+                </InputWrapper>
+
+                <InputWrapper field="ksl" label="KŞL">
+                  <input
+                    type="text"
+                    value={formData.ksl || ''}
+                    onChange={(e) => handleInputChange('ksl', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="KŞL değeri"
+                    disabled={modalType === 'izle'}
+                  />
+                </InputWrapper>
+
+                <InputWrapper field="altLimit" label="Alt Limit">
+                  <input
+                    type="number"
+                    value={formData.altLimit || ''}
+                    onChange={(e) => handleInputChange('altLimit', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Alt limit değeri"
+                    disabled={modalType === 'izle'}
+                  />
+                </InputWrapper>
+
+                <InputWrapper field="ustLimit" label="Üst Limit">
+                  <input
+                    type="number"
+                    value={formData.ustLimit || ''}
+                    onChange={(e) => handleInputChange('ustLimit', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Üst limit değeri"
+                    disabled={modalType === 'izle'}
+                  />
+                </InputWrapper>
+
+                <InputWrapper field="hedef" label="Hedef">
+                  <input
+                    type="number"
+                    value={formData.hedef || ''}
+                    onChange={(e) => handleInputChange('hedef', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Hedef değeri"
+                    disabled={modalType === 'izle'}
+                  />
+                </InputWrapper>
+
+                {/* Ek alanlar eklenebilir */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Notlar
+                  </label>
+                  <textarea
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    rows="3"
+                    placeholder="Ek notlar..."
+                    disabled={modalType === 'izle'}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-end gap-3 p-6 border-t bg-gray-50">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+              >
+                {modalType === 'izle' ? 'Kapat' : 'İptal'}
+              </button>
+              
+              {modalType !== 'izle' && (
+                <button
+                  onClick={handleModalSubmit}
+                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                >
+                  {modalType === 'yeni' ? (
+                    <>
+                      <span>➕</span>
+                      Kayıt Ekle
+                    </>
+                  ) : (
+                    <>
+                      <span>✏️</span>
+                      Güncelle
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
