@@ -113,18 +113,6 @@ const App = () => {
       description: "Kayıtları görüntüleyin, ekleyin ve düzenleyin",
       icon: List,
       color: "from-red-500 to-orange-600"
-    },
-    {
-      title: "Sistem Ayarları",
-      description: "Sistem gruplarını ve ayarlarını yapılandırın",
-      icon: Settings,
-      color: "from-orange-500 to-yellow-600"
-    },
-    {
-      title: "Gelişmiş Seçenekler",
-      description: "Sistem seçeneklerini yapılandırın",
-      icon: Sparkles,
-      color: "from-yellow-500 to-green-600"
     }
   ];
 
@@ -1294,26 +1282,6 @@ const App = () => {
                 <div className="text-2xl font-bold">0%</div>
                 <div className="text-purple-100">Tamamlanma</div>
               </div>
-            </div>
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div className="text-center p-8">
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">Sistem Ayarları</h3>
-              <p className="text-gray-500">Bu bölüm geliştirilmekte...</p>
-            </div>
-          </div>
-        );
-
-      case 5:
-        return (
-          <div className="space-y-6">
-            <div className="text-center p-8">
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">Gelişmiş Seçenekler</h3>
-              <p className="text-gray-500">Bu bölüm geliştirilmekte...</p>
             </div>
           </div>
         );
