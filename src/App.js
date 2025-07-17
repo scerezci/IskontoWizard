@@ -6,10 +6,9 @@ const App = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(''); // 'yeni', 'duzenle', 'izle'
+  const [modalType, setModalType] = useState('');
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [formData, setFormData] = useState({
-    // Step 1: Temel Bilgiler (Fotoğrafa göre güncellendi)
     kod: '',
     durum: 'Aktif',
     baslangicTarihi: '',
@@ -31,8 +30,6 @@ const App = () => {
     sefBarindaBolunun: false,
     verziparitiKampanya: false,
     commercePortalKampanya: false,
-    
-    // Diğer adımlar için placeholder
     saha: '',
     hizmetGrubu: '',
     dagitimciKriterTipi: '',
@@ -43,8 +40,6 @@ const App = () => {
     musteriKriterTipi: '',
     iadeNedeni: '',
     ekSahaKriteri: '',
-    
-    // Hedef Kriterleri alanları
     hedefUrunKriterTip: '',
     uygulamaTipi: 'Genel',
     hedefUrunKriter: '',
@@ -57,8 +52,6 @@ const App = () => {
     maksUygulamaTutari: '',
     iskProUygulanacakUrunAdedi: '',
     belgeVade: '',
-    
-    // Checkboxlar
     maksUygulamaTutariIskontoControl: false,
     promosyonKoli: false,
     birUstKademeleIskPro: false,
@@ -73,15 +66,12 @@ const App = () => {
     tutarHediyesi: false,
     iskontoTanimlamaBagli: false,
     iskProUygulanacakUrunAdediControl: false,
-    
-    // Kademeler için alanlar
     hdy: '',
     ksl: '',
     altLimit: '',
     ustLimit: '',
     hedef: '',
     gridData: [],
-    
     hedefUrunKriterTipi: 'Faal',
     maksUygulamaSayisi2: '1000'
   });
@@ -94,7 +84,7 @@ const App = () => {
       title: "Temel Bilgiler",
       description: "Kampanya temel bilgilerini girin",
       icon: User,
-      color: "primary"
+      color: "from-primary to-info"
     }
   ];
 
@@ -282,13 +272,13 @@ const App = () => {
 
     return (
       <div className="mb-3">
-        <label className="form-label">
+        <label className="form-label fw-medium">
           {label}
           {required && <span className="text-danger ms-1">*</span>}
         </label>
         <div className="position-relative">
           {children}
-          <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+          <div className="position-absolute top-50 end-0 translate-middle-y me-3" style={{ pointerEvents: 'none' }}>
             {status === 'success' && (
               <CheckCircle className="text-success" size={16} />
             )}
@@ -301,13 +291,13 @@ const App = () => {
           </div>
         </div>
         {error && (
-          <div className="text-danger small mt-1">
+          <div className="text-danger small mt-1 d-flex align-items-center">
             <AlertCircle size={12} className="me-1" />
             {error}
           </div>
         )}
         {!error && validation && !validation.isValid && (
-          <div className="text-warning small mt-1">
+          <div className="text-warning small mt-1 d-flex align-items-center">
             <AlertCircle size={12} className="me-1" />
             {validation.message}
           </div>
@@ -351,7 +341,7 @@ const App = () => {
                     value={formData.kod}
                     onChange={(e) => handleInputChange('kod', e.target.value)}
                     className={getInputClasses('kod')}
-                    placeholder="0"
+                    placeholder="Kod giriniz"
                   />
                 </InputWrapper>
               </div>
@@ -537,7 +527,7 @@ const App = () => {
                       className={getInputClasses('iskontoGrubu')}
                       placeholder="İskonto Grubu"
                     />
-                    <button className="btn btn-primary" type="button">
+                    <button className="btn btn-outline-primary" type="button">
                       <Search size={16} />
                     </button>
                   </div>
@@ -580,7 +570,7 @@ const App = () => {
                       className={getInputClasses('hareketTipi')}
                       placeholder="Hareket Tipi"
                     />
-                    <button className="btn btn-primary" type="button">
+                    <button className="btn btn-outline-primary" type="button">
                       <Search size={16} />
                     </button>
                   </div>
@@ -600,7 +590,7 @@ const App = () => {
                       className={getInputClasses('kontratButce')}
                       placeholder="Kontrat Bütçe"
                     />
-                    <button className="btn btn-primary" type="button">
+                    <button className="btn btn-outline-primary" type="button">
                       <Search size={16} />
                     </button>
                   </div>
@@ -640,8 +630,6 @@ const App = () => {
           </div>
         );
 
-      
-
       default:
         return null;
     }
@@ -662,275 +650,466 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            CRM Kampanya Wizard
-          </h1>
-          <p className="text-gray-600 text-sm md:text-base">
-            Kampanya bilgilerini adım adım tamamlayın
-          </p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-medium text-gray-700">
-              Adım {currentStep + 1} / {steps.length}
-            </span>
-            <span className="text-sm text-gray-500">
-              {Math.round(getStepProgress())}% Tamamlandı
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${getStepProgress()}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Step Navigation */}
-        <div className="flex justify-between items-center mb-8 overflow-x-auto pb-4">
-          {steps.map((step, index) => {
-            const IconComponent = step.icon;
-            const isActive = index === currentStep;
-            const isCompleted = completedSteps.includes(index);
-            const isAccessible = index <= currentStep;
-
-            return (
-              <div
-                key={index}
-                className={`flex flex-col items-center cursor-pointer transition-all duration-300 min-w-fit mx-2 ${
-                  isAccessible ? 'opacity-100' : 'opacity-50'
-                }`}
-                onClick={() => {
-                  if (isAccessible) {
-                    setCurrentStep(index);
-                  }
-                }}
-              >
-                <div className={`
-                  w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center mb-2 transition-all duration-300
-                  ${isActive 
-                    ? `bg-gradient-to-r ${step.color} text-white shadow-lg transform scale-110` 
-                    : isCompleted 
-                      ? 'bg-green-500 text-white shadow-md' 
-                      : 'bg-gray-200 text-gray-600'
-                  }
-                `}>
-                  {isCompleted && !isActive ? (
-                    <Check size={16} />
-                  ) : (
-                    <IconComponent size={16} />
-                  )}
-                </div>
-                <span className={`text-xs text-center font-medium max-w-16 md:max-w-20 ${
-                  isActive ? 'text-gray-800' : 'text-gray-500'
-                }`}>
-                  {step.title}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Step Content */}
-        <div className={`
-          bg-white rounded-xl shadow-lg p-4 md:p-8 mb-8 transition-all duration-300
-          ${isAnimating ? 'opacity-50 transform scale-95' : 'opacity-100 transform scale-100'}
-        `}>
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${steps[currentStep].color} flex items-center justify-center`}>
-                {React.createElement(steps[currentStep].icon, { className: "w-5 h-5 text-white" })}
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800">
-                {steps[currentStep].title}
-              </h2>
-            </div>
-            <p className="text-gray-600 text-sm md:text-base ml-0 md:ml-11">
-              {steps[currentStep].description}
+    <div>
+      {/* Bootstrap CSS */}
+      <link 
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" 
+        rel="stylesheet" 
+      />
+      
+      <div className="min-vh-100 bg-light">
+        <div className="container-fluid py-4">
+          {/* Header */}
+          <div className="text-center mb-5">
+            <h1 className="display-4 fw-bold text-primary mb-3">
+              CRM Kampanya Wizard
+            </h1>
+            <p className="lead text-muted">
+              Kampanya bilgilerini adım adım tamamlayın
             </p>
           </div>
-          
-          <div className="min-h-[400px] md:min-h-[500px]">
-            {renderStepContent()}
-          </div>
-        </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <button
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            className={`
-              flex items-center gap-2 px-4 md:px-6 py-3 rounded-lg font-medium transition-all duration-200 w-full sm:w-auto
-              ${currentStep === 0
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md'
-              }
-            `}
-          >
-            <ChevronLeft size={20} />
-            Önceki
-          </button>
-          
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            {currentStep < steps.length - 1 ? (
-              <button
-                onClick={nextStep}
-                disabled={!canProceed()}
-                className={`
-                  flex items-center gap-2 px-6 md:px-8 py-3 rounded-lg font-medium transition-all duration-200 w-full sm:w-auto
-                  ${canProceed()
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg hover:shadow-xl transform hover:scale-105'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }
-                `}
-              >
-                Sonraki
-                <ChevronRight size={20} />
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  console.log('Form Data:', formData);
-                  alert('🎉 Kampanya başarıyla oluşturuldu!');
-                }}
-                className="flex items-center gap-2 px-6 md:px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg font-medium hover:from-green-600 hover:to-blue-600 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 w-full sm:w-auto"
-              >
-                <Check size={20} />
-                Kampanyayı Oluştur
-              </button>
-            )}
+          {/* Progress Bar */}
+          <div className="row justify-content-center mb-5">
+            <div className="col-lg-8">
+              <div className="card shadow-sm">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <span className="fw-medium text-secondary">
+                      Adım {currentStep + 1} / {steps.length}
+                    </span>
+                    <span className="text-muted">
+                      {Math.round(getStepProgress())}% Tamamlandı
+                    </span>
+                  </div>
+                  <div className="progress" style={{ height: '8px' }}>
+                    <div 
+                      className="progress-bar bg-gradient progress-bar-striped progress-bar-animated"
+                      role="progressbar"
+                      style={{ width: `${getStepProgress()}%` }}
+                      aria-valuenow={getStepProgress()}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step Navigation */}
+          <div className="row justify-content-center mb-5">
+            <div className="col-lg-10">
+              <div className="d-flex justify-content-center align-items-center flex-wrap gap-3">
+                {steps.map((step, index) => {
+                  const IconComponent = step.icon;
+                  const isActive = index === currentStep;
+                  const isCompleted = completedSteps.includes(index);
+                  const isAccessible = index <= currentStep;
+
+                  return (
+                    <div
+                      key={index}
+                      className={`d-flex flex-column align-items-center ${
+                        isAccessible ? 'cursor-pointer' : ''
+                      }`}
+                      onClick={() => {
+                        if (isAccessible) {
+                          setCurrentStep(index);
+                        }
+                      }}
+                      style={{ 
+                        cursor: isAccessible ? 'pointer' : 'not-allowed',
+                        opacity: isAccessible ? 1 : 0.5,
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <div className={`
+                        rounded-circle d-flex align-items-center justify-content-center mb-2 shadow-sm
+                        ${isActive 
+                          ? 'bg-primary text-white' 
+                          : isCompleted 
+                            ? 'bg-success text-white' 
+                            : 'bg-light text-secondary'
+                        }
+                      `}
+                      style={{
+                        width: '50px',
+                        height: '50px',
+                        transform: isActive ? 'scale(1.1)' : 'scale(1)',
+                        transition: 'all 0.3s ease'
+                      }}>
+                        {isCompleted && !isActive ? (
+                          <Check size={20} />
+                        ) : (
+                          <IconComponent size={20} />
+                        )}
+                      </div>
+                      <span className={`text-center small fw-medium ${
+                        isActive ? 'text-primary' : 'text-secondary'
+                      }`} style={{ maxWidth: '80px' }}>
+                        {step.title}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Step Content */}
+          <div className="row justify-content-center">
+            <div className="col-lg-10">
+              <div className={`
+                card shadow-lg border-0 transition-all
+                ${isAnimating ? 'opacity-50' : 'opacity-100'}
+              `} style={{
+                transition: 'all 0.3s ease',
+                transform: isAnimating ? 'scale(0.95)' : 'scale(1)'
+              }}>
+                <div className="card-header bg-primary text-white">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-white bg-opacity-25 rounded p-2 me-3">
+                      {React.createElement(steps[currentStep].icon, { 
+                        className: "text-white", 
+                        size: 24 
+                      })}
+                    </div>
+                    <div>
+                      <h4 className="card-title mb-1">
+                        {steps[currentStep].title}
+                      </h4>
+                      <p className="card-text mb-0 opacity-75">
+                        {steps[currentStep].description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="card-body p-4" style={{ minHeight: '500px' }}>
+                  {renderStepContent()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Buttons */}
+          <div className="row justify-content-center mt-4">
+            <div className="col-lg-10">
+              <div className="card shadow-sm">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <button
+                      onClick={prevStep}
+                      disabled={currentStep === 0}
+                      className={`
+                        btn d-flex align-items-center gap-2 px-4 py-2
+                        ${currentStep === 0
+                          ? 'btn-outline-secondary disabled'
+                          : 'btn-outline-primary'
+                        }
+                      `}
+                    >
+                      <ChevronLeft size={20} />
+                      Önceki
+                    </button>
+                    
+                    <div className="d-flex align-items-center gap-3">
+                      {currentStep < steps.length - 1 ? (
+                        <button
+                          onClick={nextStep}
+                          disabled={!canProceed()}
+                          className={`
+                            btn d-flex align-items-center gap-2 px-4 py-2
+                            ${canProceed()
+                              ? 'btn-primary shadow-sm'
+                              : 'btn-outline-secondary disabled'
+                            }
+                          `}
+                        >
+                          Sonraki
+                          <ChevronRight size={20} />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            console.log('Form Data:', formData);
+                            alert('🎉 Kampanya başarıyla oluşturuldu!');
+                          }}
+                          className="btn btn-success d-flex align-items-center gap-2 px-4 py-2 shadow-sm"
+                        >
+                          <Check size={20} />
+                          Kampanyayı Oluştur
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Modal Overlay */}
+      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="flex justify-between items-center p-6 border-b">
-              <h3 className="text-xl font-semibold text-gray-800">
-                {getModalTitle()}
-              </h3>
-              <button 
-                onClick={closeModal}
-                className="text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                <span className="text-2xl">×</span>
-              </button>
-            </div>
+        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-xl modal-dialog-centered">
+            <div className="modal-content shadow-lg">
+              <div className="modal-header bg-primary text-white">
+                <h5 className="modal-title">
+                  {getModalTitle()}
+                </h5>
+                <button 
+                  type="button" 
+                  className="btn-close btn-close-white" 
+                  onClick={closeModal}
+                ></button>
+              </div>
 
-            {/* Modal Content */}
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputWrapper field="hdy" label="HDY">
-                  <input
-                    type="text"
-                    value={formData.hdy || ''}
-                    onChange={(e) => handleInputChange('hdy', e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="HDY değeri"
-                    disabled={modalType === 'izle'}
-                  />
-                </InputWrapper>
+              <div className="modal-body p-4">
+                <div className="row">
+                  <div className="col-md-6">
+                    <InputWrapper field="hdy" label="HDY">
+                      <input
+                        type="text"
+                        value={formData.hdy || ''}
+                        onChange={(e) => handleInputChange('hdy', e.target.value)}
+                        className="form-control"
+                        placeholder="HDY değeri"
+                        disabled={modalType === 'izle'}
+                      />
+                    </InputWrapper>
+                  </div>
 
-                <InputWrapper field="ksl" label="KŞL">
-                  <input
-                    type="text"
-                    value={formData.ksl || ''}
-                    onChange={(e) => handleInputChange('ksl', e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="KŞL değeri"
-                    disabled={modalType === 'izle'}
-                  />
-                </InputWrapper>
+                  <div className="col-md-6">
+                    <InputWrapper field="ksl" label="KŞL">
+                      <input
+                        type="text"
+                        value={formData.ksl || ''}
+                        onChange={(e) => handleInputChange('ksl', e.target.value)}
+                        className="form-control"
+                        placeholder="KŞL değeri"
+                        disabled={modalType === 'izle'}
+                      />
+                    </InputWrapper>
+                  </div>
 
-                <InputWrapper field="altLimit" label="Alt Limit">
-                  <input
-                    type="number"
-                    value={formData.altLimit || ''}
-                    onChange={(e) => handleInputChange('altLimit', e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="Alt limit değeri"
-                    disabled={modalType === 'izle'}
-                  />
-                </InputWrapper>
+                  <div className="col-md-6">
+                    <InputWrapper field="altLimit" label="Alt Limit">
+                      <input
+                        type="number"
+                        value={formData.altLimit || ''}
+                        onChange={(e) => handleInputChange('altLimit', e.target.value)}
+                        className="form-control"
+                        placeholder="Alt limit değeri"
+                        disabled={modalType === 'izle'}
+                      />
+                    </InputWrapper>
+                  </div>
 
-                <InputWrapper field="ustLimit" label="Üst Limit">
-                  <input
-                    type="number"
-                    value={formData.ustLimit || ''}
-                    onChange={(e) => handleInputChange('ustLimit', e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="Üst limit değeri"
-                    disabled={modalType === 'izle'}
-                  />
-                </InputWrapper>
+                  <div className="col-md-6">
+                    <InputWrapper field="ustLimit" label="Üst Limit">
+                      <input
+                        type="number"
+                        value={formData.ustLimit || ''}
+                        onChange={(e) => handleInputChange('ustLimit', e.target.value)}
+                        className="form-control"
+                        placeholder="Üst limit değeri"
+                        disabled={modalType === 'izle'}
+                      />
+                    </InputWrapper>
+                  </div>
 
-                <InputWrapper field="hedef" label="Hedef">
-                  <input
-                    type="number"
-                    value={formData.hedef || ''}
-                    onChange={(e) => handleInputChange('hedef', e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="Hedef değeri"
-                    disabled={modalType === 'izle'}
-                  />
-                </InputWrapper>
+                  <div className="col-md-6">
+                    <InputWrapper field="hedef" label="Hedef">
+                      <input
+                        type="number"
+                        value={formData.hedef || ''}
+                        onChange={(e) => handleInputChange('hedef', e.target.value)}
+                        className="form-control"
+                        placeholder="Hedef değeri"
+                        disabled={modalType === 'izle'}
+                      />
+                    </InputWrapper>
+                  </div>
 
-                {/* Ek alanlar eklenebilir */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Notlar
-                  </label>
-                  <textarea
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    rows="3"
-                    placeholder="Ek notlar..."
-                    disabled={modalType === 'izle'}
-                  />
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">Notlar</label>
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        placeholder="Ek notlar..."
+                        disabled={modalType === 'izle'}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Modal Footer */}
-            <div className="flex justify-end gap-3 p-6 border-t bg-gray-50">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-              >
-                {modalType === 'izle' ? 'Kapat' : 'İptal'}
-              </button>
-              
-              {modalType !== 'izle' && (
+              <div className="modal-footer bg-light">
                 <button
-                  onClick={handleModalSubmit}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={closeModal}
                 >
-                  {modalType === 'yeni' ? (
-                    <>
-                      <span>➕</span>
-                      Kayıt Ekle
-                    </>
-                  ) : (
-                    <>
-                      <span>✏️</span>
-                      Güncelle
-                    </>
-                  )}
+                  {modalType === 'izle' ? 'Kapat' : 'İptal'}
                 </button>
-              )}
+                
+                {modalType !== 'izle' && (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleModalSubmit}
+                  >
+                    {modalType === 'yeni' ? (
+                      <>
+                        <span className="me-2">➕</span>
+                        Kayıt Ekle
+                      </>
+                    ) : (
+                      <>
+                        <span className="me-2">✏️</span>
+                        Güncelle
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Custom CSS */}
+      <style>{`
+        .transition-all {
+          transition: all 0.3s ease;
+        }
+        
+        .cursor-pointer {
+          cursor: pointer;
+        }
+        
+        .progress-bar {
+          background: linear-gradient(45deg, #007bff, #6f42c1);
+        }
+        
+        .card {
+          border: none;
+        }
+        
+        .card-header {
+          background: linear-gradient(45deg, #007bff, #6f42c1) !important;
+        }
+        
+        .btn-primary {
+          background: linear-gradient(45deg, #007bff, #6f42c1);
+          border: none;
+        }
+        
+        .btn-primary:hover {
+          background: linear-gradient(45deg, #0056b3, #5a2d91);
+          transform: translateY(-1px);
+        }
+        
+        .btn-success {
+          background: linear-gradient(45deg, #28a745, #20c997);
+          border: none;
+        }
+        
+        .btn-success:hover {
+          background: linear-gradient(45deg, #1e7e34, #17a2b8);
+          transform: translateY(-1px);
+        }
+        
+        .form-control:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        .form-check-input:checked {
+          background-color: #007bff;
+          border-color: #007bff;
+        }
+        
+        .bg-light {
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+        }
+        
+        .shadow-lg {
+          box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+        }
+        
+        .shadow-sm {
+          box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        }
+        
+        .input-group .btn {
+          border-left: none;
+        }
+        
+        .input-group .form-control {
+          border-right: none;
+        }
+        
+        .input-group .form-control:focus {
+          z-index: 3;
+        }
+        
+        .modal-content {
+          border: none;
+          border-radius: 0.5rem;
+        }
+        
+        .modal-header {
+          border-bottom: none;
+          border-radius: 0.5rem 0.5rem 0 0;
+        }
+        
+        .modal-footer {
+          border-top: 1px solid #dee2e6;
+          border-radius: 0 0 0.5rem 0.5rem;
+        }
+        
+        .is-valid {
+          border-color: #28a745;
+        }
+        
+        .is-invalid {
+          border-color: #dc3545;
+        }
+        
+        .border-warning {
+          border-color: #ffc107 !important;
+        }
+        
+        .text-primary {
+          color: #007bff !important;
+        }
+        
+        .display-4 {
+          background: linear-gradient(45deg, #007bff, #6f42c1);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        @media (max-width: 768px) {
+          .container-fluid {
+            padding: 1rem;
+          }
+          
+          .card-body {
+            padding: 1rem;
+          }
+          
+          .display-4 {
+            font-size: 2rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };
